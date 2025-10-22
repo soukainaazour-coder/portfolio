@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - AZOUR SOUKAINA - Ingénieure Génie Électrique</title>
+    
+    <meta name="robots" content="noindex"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ==================== VARIABLES DE COULEURS ==================== */
+        :root {
+            --primary-color: #00e6e6; /* Bleu électrique vif */
+            --secondary-color: #ffa500; /* Orange/Jaune pour l'accentuation */
+            --text-color: #e0f7fa; /* Texte très clair */
+            --card-background-reveal: rgba(10, 25, 47, 0.2); 
+            --content-block-opaque: rgba(10, 25, 47, 0.98); 
+            --sidebar-background: rgba(5, 15, 30, 0.98); 
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* ==================== BASE STYLES & BACKGROUND DYNAMIQUE ==================== */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            transition: background-image 0.5s ease-in-out;
+            
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75); 
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        /* ==================== LAYOUT & CONTAINER ==================== */
+        .portfolio-container {
+            width: 90%;
+            max-width: 1200px;
+            background: var(--card-background-reveal); 
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            min-height: 80vh;
+            margin: 40px 0;
+            border: 1px solid var(--primary-color);
+            z-index: 1;
+        }
+
+        /* ==================== GESTION DE LA TRANSITION DU CONTENU ==================== */
+        .content-area {
+            flex-grow: 1;
+            padding: 40px;
+            position: relative;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out; 
+        }
+
+        .content-area.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* ==================== SIDEBAR (ICONS) ==================== */
+        .sidebar {
+            width: 80px;
+            background: var(--sidebar-background);
+            color: white;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+        }
+
+        .icon-btn {
+            padding: 20px 0;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+            color: var(--text-color);
+        }
+
+        .icon-btn i {
+            font-size: 24px;
+        }
+
+        .icon-btn:hover, .icon-btn.active {
+            background: rgba(0, 230, 230, 0.2);
+            color: var(--primary-color);
+        }
+
+        /* ==================== HEADER (PROFIL & CONTACT) ==================== */
+        .header-content {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 20px; 
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .profile-pic {
+            width: 250px; 
+            height: 250px; 
+            border-radius: 8px; 
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+        }
+        
+        .header-info-name {
+            width: 100%;
+            text-align: center; 
+        }
+
+        .header-info-name h1 {
+            font-size: 2.8em;
+            margin-top: 0; 
+        }
+
+        /* COORDONNÉES: Centrées en bas du bloc d'en-tête */
+        .contact-info {
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+            width: 100%;
+            margin-top: 10px; 
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .contact-item i {
+            color: var(--secondary-color);
+        }
+        
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .contact-item a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* STYLE POUR LE QR CODE (CSR) */
+        .qr-code-container {
+            text-align: center;
+            margin-top: 25px; /* Positionnement après les coordonnées */
+        }
+        .qr-code {
+            width: 120px; /* Force la taille carrée */
+            height: 120px; /* Force la taille carrée */
+            border: 3px solid var(--secondary-color);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            display: block;
+            margin: 0 auto;
+        }
+        .qr-code-label {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: var(--primary-color);
+        }
+
+
+        /* ==================== STYLES DE CONTENU DÉTAILLÉ ==================== */
+        .experience-item, .project-item, .training-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 5px solid var(--primary-color);
+            background: var(--content-block-opaque); 
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .experience-item:hover, .project-item:hover, .training-item:hover {
+            background: rgba(10, 25, 47, 1); 
+        }
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .role-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+        }
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .skill-item-bubble {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: rgba(0, 230, 230, 0.15);
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            font-size: 0.9em;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .skill-item-bubble i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+        #divers-section .skill-item-bubble {
+            background: rgba(255, 165, 0, 0.15);
+            border: 1px solid var(--secondary-color);
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ==================== MEDIA QUERIES (RESPONSIVE) ==================== */
+        @media (max-width: 900px) {
+            .portfolio-container { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            }
+            .icon-btn { padding: 10px 0; }
+            .content-area { padding: 20px; }
+            .header-content { text-align: center; }
+            .profile-pic { width: 150px; height: 150px; }
+            .qr-code { width: 100px; height: 100px; margin-top: 15px; } /* Adapté au mobile */
+            #profil-section.active { display: block; }
+            body::before { backdrop-filter: blur(5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-container">
+        <div class="sidebar">
+            
+            <div class="icon-btn active" data-section="profil"><i class="fas fa-user-tie"></i></div>
+            
+            <div class="icon-btn" data-section="experience">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="icon-btn" data-section="formation">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="icon-btn" data-section="projets">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <div class="icon-btn" data-section="competences">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="icon-btn" data-section="divers">
+                <i class="fas fa-handshake"></i>
+            </div>
+        </div>
+
+        <div class="content-area">
+
+            <div id="profil-section" class="section active">
+                <div class="header-content">
+                    
+                    <img src="mm.png" alt="Photo de profil" class="profile-pic">
+                    <div class="header-info-name">
+                        <h1>AZOUR SOUKAINA</h1>
+                        <p>Futur Diplômée D'un Master en Génie Électrique et Systèmes Industriels Intelligents</p>
+                    </div>
+
+                    <div class="contact-info">
+                        <span class="contact-item">
+                            <i class="fas fa-envelope"></i> 
+                            <a href="mailto:soukaina.azour@gmail.com">soukaina.azour@gmail.com</a>
+                        </span>
+                        <span class="contact-item">
+                            <i class="fas fa-phone"></i> 
+                            <a href="tel:+212649161296">+212 6 49 16 12 96</a>
+                        </span>
+                        <span class="contact-item">
+                            <i class="fab fa-linkedin"></i>
+                            <a href="https://www.linkedin.com/in/soukaina-azour-4a04b1350" target="_blank" rel="noopener noreferrer">
+                                Profil LinkedIn
+                            </a>
+                        </span>
+                        <span class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i> 
+                            AGADIR, MAROC
+                        </span>
+                    </div>
+
+                    <div class="qr-code-container">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://drive.google.com/file/d/14Q0u0SumkAZbwwSJ1CzBj5xoZYZ8KxvW/view?usp=drive_link" 
+                             alt="QR Code pour le CV PDF en ligne" 
+                             class="qr-code">
+                        <span class="qr-code-label">Scannez pour télécharger le CV PDF</span>
+                    </div>
+                        
+                </div>
+
+                <div class="profile-summary">
+                    <h2>PROFIL</h2>
+                    <p>Future diplômée d’un Master en Génie Électrique et Systèmes Industriels Intelligents, je suis à la recherche d’un stage PFE pré-embauche rémunéré de 4 mois à partir du 1er janvier 2026. Je souhaite mettre mes compétences en réseaux électriques, optimisation énergétique et énergies renouvelables au service de projets concrets, avec un engagement total et la perspective d’une intégration future dans l’entreprise.</p>
+                </div>
+            </div>
+
+            <div id="experience-section" class="section">
+                <h2>EXPÉRIENCES PROFESSIONNELLES <i class="fas fa-briefcase"></i></h2>
+                <div class="experience-item">
+                    <p class="role-title">STAGE TECHNIQUE</p>
+                    <p class="company-info">EMPEGEC, Port Agadir | 2024-2025</p>
+                    <ul><li>Étude électrique MT d'un transformateur pour dimensionnement des batteries de compensation et du disjoncteur au Port d'Agadir.</li><li>Participation à la maintenance des réseaux HT/MT: diagnostic et résolution de défauts sur site.</li></ul>
+                </div>
+                <div class="experience-item">
+                    <p class="role-title">STAGE TECHNIQUE</p>
+                    <p class="company-info">AEM Électromécanique, Ait Melloul Agadir | 2023-2024</p>
+                    <ul><li>Automatisation et supervision d'une machine de calibrage et triage de tomates cerises (Calibreuse).</li></ul>
+                </div>
+                <div class="experience-item">
+                    <p class="role-title">STAGE PFE_LP</p>
+                    <p class="company-info">AGAMINE SOLAR, Zone industrielle Agadir | 2023-2024</p>
+                    <ul><li>Étude et conception d'un système d'éclairage public solaire pour un site à Abou Dhabi via Dialux Evo.</li><li>Optimisation de l'efficacité énergétique et de la répartition lumineuse selon les normes en vigueur.</li></ul>
+                </div>
+                <div class="experience-item">
+                    <p class="role-title">STAGE PFE_DUT</p>
+                    <p class="company-info">Les huileries du souss Belhassan (HSB), Agadir | 2022-2023</p>
+                    <ul><li>Analyse du processus de raffinage et des étapes de transformation des matières premières.</li><li>Supervision et optimisation de la commande de préparation de la phase aqueuse de la margarine.</li></ul>
+                </div>
+                <div class="experience-item">
+                    <p class="role-title">STAGE</p>
+                    <p class="company-info">L'Office National de l'Electricité et de l'Eau Potable Branche Eau (ONEE), Agadir | 2022-2023</p>
+                    <ul><li>Analyse de la consommation énergétique de la station Sidi Boushab.</li><li>Maintenance et suivi du bon fonctionnement de l'installation d'alimentation en eau d'Agadir.</li></ul>
+                </div>
+            </div>
+
+            <div id="formation-section" class="section">
+                <h2>FORMATION <i class="fas fa-graduation-cap"></i></h2>
+                <div class="training-item">
+                    <p class="role-title">MASTER EN GÉNIE ÉLECTRIQUE ET SYSTÈMES INDUSTRIELS INTELLIGENTS</p>
+                    <p class="company-info">ENSET Mohammedia | 2024-2026</p>
+                </div>
+                <div class="training-item">
+                    <p class="role-title">LP EN ÉNERGIE RENOUVELABLE ET DÉVELOPPEMENT DURABLE</p>
+                    <p class="company-info">EST Essaouira | 2023-2024</p>
+                </div>
+                <div class="training-item">
+                    <p class="role-title">DUT EN GÉNIE ÉLECTRIQUE</p>
+                    <p class="company-info">EST Agadir | 2022-2023</p>
+                </div>
+                <div class="training-item">
+                    <p class="role-title">BACCALAURÉAT EN SCIENCE ET TECHNOLOGIES ÉLECTRIQUES</p>
+                    <p class="company-info">Lycée technique Al Idrissi Agadir | 2020-2021</p>
+                </div>
+                <hr>
+                <h3>LANGUES <i class="fas fa-globe"></i></h3>
+                <ul>
+                    <li>Français: Niveau professionnel</li>
+                    <li>Anglais: Niveau professionnel</li>
+                    <li>Arabe: Langue maternelle</li>
+                </ul>
+            </div>
+
+            <div id="projets-section" class="section">
+                <h2>PROJETS ACADÉMIQUES <i class="fas fa-project-diagram"></i></h2>
+                <div class="project-item">
+                    <p class="role-title">PROJET DE CLASSE - MASTER (2025)</p>
+                    <ul><li>Commande non-linéaire d'une petite éolienne monophasée isolée à base de machine synchrone triphasée avec bus intermédiaire de stockage sur batteries.</li><li>Smart irrigation : pilotage d'un système d'arrosage via ESP32 et application Blynk (IoT).</li></ul>
+                </div>
+                <div class="project-item">
+                    <p class="role-title">PROJET DE CLASSE - LP (2024)</p>
+                    <ul><li>Dimensionnement d'une installation hybride (éolien/solaire) à Tan-Tan.</li></ul>
+                </div>
+                <div class="project-item">
+                    <p class="role-title">PROJET DE FIN D'ÉTUDES - DUT (2023)</p>
+                    <ul><li>Réalisation d'une maquette didactique pour l'étude du pont redresseur asymétrique commandé par Arduino.</li></ul>
+                </div>
+            </div>
+
+            <div id="competences-section" class="section">
+                <h2>COMPÉTENCES <i class="fas fa-cogs"></i></h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>LOGICIELS MAÎTRISÉS</h3>
+                        <p class="role-title">Logiciels Pro</p>
+                        <div class="skill-list">
+                            <span class="skill-item-bubble"><i class="fas fa-bolt"></i> Etap</span>
+                            <span class="skill-item-bubble"><i class="fas fa-lightbulb"></i> Dialux_Evo</span>
+                            <span class="skill-item-bubble"><i class="fas fa-code-branch"></i> XRelais</span>
+                            <span class="skill-item-bubble"><i class="fas fa-microchip"></i> Arduino IDE</span>
+                            <span class="skill-item-bubble"><i class="fas fa-ruler-combined"></i> Autocad</span>
+                            <span class="skill-item-bubble"><i class="fas fa-cube"></i> Sketchup</span>
+                            <span class="skill-item-bubble"><i class="fas fa-sun"></i> PVsyst</span>
+                            <span class="skill-item-bubble"><i class="fas fa-network-wired"></i> Power World</span>
+                            <span class="skill-item-bubble"><i class="fas fa-calculator"></i> Matlab</span>
+                            <span class="skill-item-bubble"><i class="fas fa-laptop-code"></i> Amee_Binayate</span>
+                        </div>
+                        <p class="role-title">Programmation & Automatisation</p>
+                        <div class="skill-list">
+                            <span class="skill-item-bubble"><i class="fas fa-file-code"></i> C</span>
+                            <span class="skill-item-bubble"><i class="fab fa-python"></i> Python</span>
+                            <span class="skill-item-bubble"><i class="fab fa-html5"></i> HTML</span>
+                            <span class="skill-item-bubble"><i class="fab fa-css3-alt"></i> CSS</span>
+                            <span class="skill-item-bubble"><i class="fas fa-robot"></i> TIA PORTAL</span>
+                            <span class="skill-item-bubble"><i class="fas fa-robot"></i> TWIDOSUITE</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3>COMPÉTENCES TECHNIQUES</h3>
+                        <ul>
+                            <li>Schémas et câblage électriques</li>
+                            <li>Distribution et protection des réseaux</li>
+                            <li>Installation et suivi de systèmes solaires</li>
+                            <li>Efficacité énergétique et étude thermique des bâtiments</li>
+                            <li>Techniques de stockage d'énergie</li>
+                        </ul>
+                        <p class="role-title">Bureautique</p>
+                        <div class="skill-list">
+                            <span class="skill-item-bubble"><i class="far fa-file-word"></i> Word</span>
+                            <span class="skill-item-bubble"><i class="far fa-file-excel"></i> Excel</span>
+                            <span class="skill-item-bubble"><i class="far fa-file-powerpoint"></i> Powerpoint</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="divers-section" class="section">
+                <h2>CENTRES D'INTÉRÊT & QUALITÉS <i class="fas fa-star"></i></h2>
+
+                <div class="project-item">
+                    <p class="role-title"><i class="fas fa-users"></i> Leadership & Organisation</p>
+                    <p>Membre actif du Club Mécatronique - GEIW 2025.</p>
+                </div>
+
+                <div class="project-item">
+                    <p class="role-title"><i class="fas fa-heart"></i> Engagement Solidaire</p>
+                    <p>Projet Tifawine avec le Club JLM : aide humanitaire à 169 familles.</p>
+                </div>
+
+                <div class="project-item">
+                    <p class="role-title"><i class="fas fa-award"></i> Reconnaissance</p>
+                    <p>Participation en 2018 à l'association Dar Si Hmad (projet de collecte d'eau à partir du brouillard - Attestation d'excellence).</p>
+                </div>
+
+                <hr>
+                <p class="role-title"><i class="fas fa-key"></i> Qualités Clés</p>
+                <div class="skill-list">
+                    <span class="skill-item-bubble"><i class="fas fa-people-carry"></i> Esprit d'équipe</span>
+                    <span class="skill-item-bubble"><i class="fas fa-lightbulb"></i> Initiative</span>
+                    <span class="skill-item-bubble"><i class="fas fa-sync-alt"></i> Adaptabilité</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const iconButtons = document.querySelectorAll('.icon-btn');
+            const sections = document.querySelectorAll('.section');
+            const body = document.body;
+            const contentArea = document.querySelector('.content-area');
+
+            // Tableau des URLs d'images correspondant à chaque section
+            const bgImages = {
+                'profil': 'https://eyedys.blob.core.windows.net/auphys/Page%20metier/Ing%C3%A9nierie%20%C3%A9lectrique/shutterstock_2296858871.jpeg',
+                'experience': 'https://careers.atkinsrealis.com/fr/img/z4EuzCRWtUdLowjZ2oCYyA/thumbnailTsT4qqs3bUZ5FAjZrrbklA.jpg?v=e2c7257bc3a628ccebb1429981128394',
+                'formation': 'https://image.jimcdn.com/app/cms/image/transf/none/path/sbc515ffa3127fd3b/image/iee91df65cbc5c85e/version/1522846260/image.jpg',
+                'projets': 'https://interingenieria.com/wp-content/uploads/2023/03/image2-1024x683.jpg',
+                'competences': 'https://smartstudent.africa/wp-content/uploads/2024/01/energies-renouvelables.jpg',
+                'divers': 'https://www.aiu.edu/wp-content/uploads/2022/12/cq5dam.web_.1280.1280.webp'
+            };
+
+            // Fonction pour changer l'arrière-plan du body
+            function changeBackground(sectionId) {
+                const imageUrl = bgImages[sectionId];
+                if (imageUrl) {
+                    body.style.backgroundImage = `url('${imageUrl}')`;
+                }
+            }
+
+            // Fonction pour gérer la transition et l'affichage des sections
+            function showSection(sectionId) {
+                // 1. Masquer le contenu actuel (début de la phase de "réflexion")
+                contentArea.classList.add('fade-out');
+
+                // 2. Changer l'arrière-plan du body 
+                changeBackground(sectionId);
+
+                // 3. Délai pour la phase de "réflexion" (600ms)
+                setTimeout(() => {
+                    // a. Masquer l'ancienne section et désactiver l'ancien icône
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        section.style.display = 'none';
+                    });
+                    iconButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // b. Activer la nouvelle section et l'icône correspondante
+                    const activeSection = document.getElementById(sectionId + '-section');
+                    if (activeSection) {
+                        activeSection.classList.add('active');
+                        activeSection.style.display = 'block'; 
+                        document.querySelector(`.icon-btn[data-section="${sectionId}"]`).classList.add('active');
+                    }
+
+                    // c. Afficher le nouveau contenu
+                    contentArea.classList.remove('fade-out');
+
+                }, 600); 
+            }
+
+            // Attacher l'événement click à chaque icône
+            iconButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sectionId = btn.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+
+            // Afficher la section "profil" par défaut au chargement
+            showSection('profil');
+        });
+    </script>
+</body>
+</html>
